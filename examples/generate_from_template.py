@@ -4,7 +4,7 @@ import os,sys,urllib2
 response = urllib2.urlopen('https://raw.github.com/roclas/utils27.py/master/Templater.py')
 html = response.read()
 #exec html
-file=open("Templater.py",'wa')
+file=open("../lib/Templater.py",'wa')
 file.write(html)
 file.close()
 import Templater
