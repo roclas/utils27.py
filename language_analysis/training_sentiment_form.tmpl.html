@@ -2,11 +2,15 @@
 	table,tr,td{
 		border:1px solid black;
 	}
+	textarea{
+		display:none;
+	}
 </style>
-<form style="width:50%;">
+<form method="POST" style="width:50%;">
 <table>
 {% for l in lines  %}
     <tr><td>{{ l }}</td><td>
+	<textarea name="t{{ forloop.counter0 }}" >{{ l }}</textarea>
 	<input type="radio" name="l{{ forloop.counter0 }}" value="positive">pos<br>
 	<input type="radio" name="l{{ forloop.counter0 }}" value="negative">neg
     </td> </tr>
