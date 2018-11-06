@@ -25,8 +25,9 @@ for p in positions:
     m=min(x[0] for x in p);c=0
     for i in range(len(p)):
         (v,u)=p[i];c+=1
-        if(v>=m):p[i]=(c,u)
-        else:p[i]=(p[i-1][0],u);m=v
+        if(v>m)or(i==0):p[i]=(c,u)
+        else:
+            p[i]=(p[i-1][0],u);m=v
         
 
 norm={}
