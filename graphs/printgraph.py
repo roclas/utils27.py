@@ -10,19 +10,18 @@ with open("standings.txt") as f:
         (key, val) = line.split(",")
         d[key] = val.strip().split()
 
+weeks=range(len(d[d.keys()[0]]))
+
 lines={}
 for u in d.keys():
-    lines[u]=[]
-    total=0.0
-    for w in range(len(d[d.keys()[0]])):
-        total=int(d[u][w])+total
-        lines[u].append(total/(w+1))
+    lines[u]=[0.0]
+    for w in weeks:lines[u].append((int(d[u][w])+lines[u][-1]))
 
+maxs=[max(x) for x in np.array([ lines[u][1:] for u in d.keys()]).transpose()]
 
-
-weeks=range(0,len(lines[d.keys()[0]]))
-for u in d.keys():
-    plt.plot(weeks,lines[u],label=u)
+plt.ylabel("position"); plt.xlabel("week")
+plt.yticks(color="w")
+for u in d.keys():plt.plot(weeks,[lines[u][1:][w]/maxs[w] for w in weeks],label=u)
 plt.legend()
 plt.show()
     
