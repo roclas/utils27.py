@@ -19,26 +19,17 @@ for u in users:
     lines[u]=[0.0]
     for w in weeks:lines[u].append((int(d[u][w])+lines[u][-1]))
 
-maxs=[max(x) for x in np.array([ lines[u][1:] for u in users]).transpose()]
 t=[x for x in np.array([ lines[u][1:] for u in users]).transpose()]
-positions=[sorted(zip(w,users)) for w in t]
-for p in positions:
-    c=0;m=min(x[0] for x in p)
-    for i in range(len(p)):
-        (v,u)=p[i];c+=1
-        if(v>m)or(c==1):p[i]=(c,u);m=v
-        else:p[i]=(p[i-1][0],u)
+positions=[ reduce(lambda(ac,c,m),(n,b):
+            (ac+[( c+1 if(n>m)or(c==0) else c ,b)], c+1, n)
+            ,p,([],0,0)  )[0] for p in [sorted(zip(w,users)) for w in t]]
         
-norm={}
-for u in users: norm[u]=[]
-for p in positions:
-    for (i,u) in p: norm[u].append(i)
+norm=dict([(u,[]) for u in users])
+for(i,u)in [e for p in positions for e in p]: norm[u].append(i)
 
     
-
 plt.ylabel("position"); plt.xlabel("week")
 plt.yticks(color="w")
 for u in users:plt.plot(weeks,[norm[u][w] for w in weeks],label=u)
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),  shadow=True, ncol=8)
 plt.show()
-    
