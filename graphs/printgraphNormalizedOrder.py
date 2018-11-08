@@ -1,35 +1,36 @@
 #!/usr/bin/env python
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
-d = {}
-with open("standings.txt") as f:
-    for line in f:
-        (key, val) = line.split(",")
-        d[key] = [int(x) for x in val.strip().split()]
+################################################
+####put all the data in a dictionary###
+################################################
+u= dict(
+        [(a,[int(x) for x in b.strip().split()]) 
+            for (a,b) in [l.split(",") 
+                for l in open("standings.txt").readlines()]]
+        )
 
+l=dict([(e,reduce(lambda ac,x:ac+[int(x)+ac[-1]],u[e],[0])[1:]) for e in u])
 
-users=d.keys()
-weeks=range(len(d[users[0]]))
-
-lines={}
-for u in users:
-    lines[u]=[0.0]
-    for w in weeks:lines[u].append((int(d[u][w])+lines[u][-1]))
-
-t=[x for x in np.array([ lines[u][1:] for u in users]).transpose()]
-positions=[ reduce(lambda(ac,c,m),(n,b):
+################################################
+####convert the points in possitions/rankings###
+################################################
+tr=[x for x in np.array([ l[e] for e in u]).transpose()]
+rank=[ reduce(lambda(ac,c,m),(n,b):
             (ac+[( c+1 if(n>m)or(c==0) else c ,b)], c+1, n)
-            ,p,([],0,0)  )[0] for p in [sorted(zip(w,users)) for w in t]]
-        
-norm=dict([(u,[]) for u in users])
-for(i,u)in [e for p in positions for e in p]: norm[u].append(i)
+            ,p,([],0,0)  )[0] for p in [sorted(zip(t,u)) for t in tr]]
 
+norm=dict([(e,[]) for e in u])
+for(i,e)in [j for p in rank for j in p]: norm[e].append(i)
     
+################################################
+####print the graph###
+################################################
 plt.ylabel("position"); plt.xlabel("week")
 plt.yticks(color="w")
-for u in users:plt.plot(weeks,[norm[u][w] for w in weeks],label=u)
+w=range(len(u[u.keys()[0]]))
+for e in u:plt.plot(w,[norm[e][t] for t in w],label=e)
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),  shadow=True, ncol=8)
 plt.show()
