@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-tae=0.03
-taxes=0.21
-years=35
-times_per_year=4
-amount=1000
+tae=0.25
+taxes=0.00
+years=8
+times_per_year=12
+amount=100000
 
 interest=tae/times_per_year
 
